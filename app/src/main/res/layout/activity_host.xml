@@ -5,20 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/host_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
-
     <android.support.design.widget.TabLayout
         android:id="@+id/host_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </android.support.design.widget.TabLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme" />
 
     <RelativeLayout
         android:id="@+id/host_relative_layout"
