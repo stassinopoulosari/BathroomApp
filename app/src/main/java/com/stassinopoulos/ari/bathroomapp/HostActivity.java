@@ -1,19 +1,16 @@
 package com.stassinopoulos.ari.bathroomapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.widget.RelativeLayout;
 
 public class HostActivity extends AppCompatActivity {
 
     private TabLayout mTabLayout;
-    //private Toolbar mToolbar;
     private RelativeLayout mRootView;
     private HostTabType mHostTabType;
 
