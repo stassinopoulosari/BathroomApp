@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.RelativeLayout;
+import com.backendless.Backendless;
 
 public class HostActivity extends AppCompatActivity {
 
@@ -23,6 +24,11 @@ public class HostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Backendless.setUrl( Defaults.SERVER_URL );
+        Backendless.initApp( getApplicationContext(),
+                Defaults.APPLICATION_ID,
+                Defaults.API_KEY );
 
         setContentView(R.layout.activity_host);
         mTabLayout = findViewById(R.id.host_tab_layout);
