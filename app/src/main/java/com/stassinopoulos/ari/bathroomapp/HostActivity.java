@@ -34,9 +34,9 @@ public class HostActivity extends AppCompatActivity {
         mTabLayout = findViewById(R.id.host_tab_layout);
         mRootView = findViewById(R.id.host_relative_layout);
 
-        mTabLayout.addTab(mTabLayout.newTab().setText("Home").setTag(HostTabType.HOME_TAB));
-        mTabLayout.addTab(mTabLayout.newTab().setText("Report").setTag(HostTabType.REPORT_TAB));
-        mTabLayout.addTab(mTabLayout.newTab().setText("Request").setTag(HostTabType.REQUEST_TAB));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.home_header).setTag(HostTabType.HOME_TAB));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.report_header).setTag(HostTabType.REPORT_TAB));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.request_header).setTag(HostTabType.REQUEST_TAB));
 
         getSupportActionBar().setElevation(0.0f);
 

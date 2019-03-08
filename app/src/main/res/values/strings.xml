@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BathroomApp</string>
+    <string name="home_header">Home</string>
+    <string name="report_header">Report</string>
+    <string name="request_header">Request</string>
+
 </resources>
