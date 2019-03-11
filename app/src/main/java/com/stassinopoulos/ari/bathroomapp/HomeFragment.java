@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
 public class HomeFragment extends Fragment {
 
     private final int fragmentResource = R.layout.fragment_home;
@@ -23,7 +21,7 @@ public class HomeFragment extends Fragment {
         mRecentReportList = fragmentView.findViewById(R.id.home_recent_reports_list);
 
         //TODO Get list of bathroom reports
-        mRecentReportList.setAdapter(new RecentActivityAdapter(getContext(), 0, new ArrayList<BathroomReport>()));
+        //mRecentReportList.setAdapter(new RecentActivityAdapter(getContext(), 0, new ArrayList<BathroomReport>()));
 
         return fragmentView;
 

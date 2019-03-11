@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,7 +9,6 @@
         android:id="@+id/report_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,16 +21,22 @@
             android:layout_marginTop="8dp"
             android:orientation="vertical">
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
             <TextView
                 android:id="@+id/report_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="Report"
+                android:textColor="#000000"
+                android:textSize="20sp"
                 tools:text="@string/report_header" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                android:layout_height="15dp" />
 
             <TextView
                 android:id="@+id/report_header_building"
@@ -47,7 +51,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                android:layout_height="12dp" />
 
             <TextView
                 android:id="@+id/report_header_floor"
@@ -56,13 +60,13 @@
                 android:text="Floor" />
 
             <Spinner
-                android:id="@+id/report_building_spinner2"
+                android:id="@+id/report_floor_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                android:layout_height="12dp" />
 
             <TextView
                 android:id="@+id/report_header_gender"
@@ -71,13 +75,13 @@
                 android:text="Gender" />
 
             <Spinner
-                android:id="@+id/report_building_spinner3"
+                android:id="@+id/report_gender_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="12dp" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                android:layout_height="12dp" />
 
             <TextView
                 android:id="@+id/report_header_status"
@@ -86,9 +90,21 @@
                 android:text="Status" />
 
             <Spinner
-                android:id="@+id/report_building_spinner4"
+                android:id="@+id/report_status_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <Button
+                android:id="@+id/report_submit_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
+                android:text="Submit" />
 
         </LinearLayout>
     </ScrollView>

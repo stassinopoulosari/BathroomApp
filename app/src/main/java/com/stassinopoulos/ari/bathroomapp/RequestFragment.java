@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 public class RequestFragment extends Fragment {
 
     private final int fragmentResource = R.layout.fragment_request;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

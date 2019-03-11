@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.RelativeLayout;
+
 import com.backendless.Backendless;
 
 public class HostActivity extends AppCompatActivity {
@@ -15,20 +16,14 @@ public class HostActivity extends AppCompatActivity {
     private RelativeLayout mRootView;
     private HostTabType mHostTabType;
 
-    public enum HostTabType {
-        HOME_TAB,
-        REPORT_TAB,
-        REQUEST_TAB
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Backendless.setUrl( Defaults.SERVER_URL );
-        Backendless.initApp( getApplicationContext(),
+        Backendless.setUrl(Defaults.SERVER_URL);
+        Backendless.initApp(getApplicationContext(),
                 Defaults.APPLICATION_ID,
-                Defaults.API_KEY );
+                Defaults.API_KEY);
 
         setContentView(R.layout.activity_host);
         mTabLayout = findViewById(R.id.host_tab_layout);
@@ -45,7 +40,7 @@ public class HostActivity extends AppCompatActivity {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if(!(tab.getTag() instanceof HostTabType))
+                if (!(tab.getTag() instanceof HostTabType))
                     return;
 
                 switchTab((HostTabType) tab.getTag());
@@ -66,10 +61,10 @@ public class HostActivity extends AppCompatActivity {
     }
 
     private void switchTab(HostTabType hostTabType) {
-        if(mHostTabType != hostTabType) {
+        if (mHostTabType != hostTabType) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-            switch(hostTabType) {
+            switch (hostTabType) {
                 case HOME_TAB:
                     ft.replace(R.id.host_relative_layout, new HomeFragment());
                     break;
@@ -87,6 +82,11 @@ public class HostActivity extends AppCompatActivity {
         }
     }
 
+    public enum HostTabType {
+        HOME_TAB,
+        REPORT_TAB,
+        REQUEST_TAB
+    }
 
 
 }

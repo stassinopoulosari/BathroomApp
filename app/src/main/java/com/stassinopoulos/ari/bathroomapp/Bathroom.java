@@ -2,18 +2,73 @@ package com.stassinopoulos.ari.bathroomapp;
 
 public class Bathroom {
 
-    public enum Building {
-        A,B,E,G,J,M,N,Q
+    public enum Building implements Adaptable {
+        A("A"),B("B"),E("E"),G("G"),J("J"),M("M"),N("N"),Q("Q");
+
+        private String mLetter;
+
+        public String getTextValue() {
+            return mLetter;
+        }
+
+        public int getNumberOfFloors() {
+            switch(this) {
+                case A:
+                case B:
+                case E:
+                case G:
+                case N:
+                case Q:
+                    return 1;
+                default:
+                    return 2;
+            }
+        }
+
+        Building(String letter) {
+            mLetter = letter;
+        }
+
+
     }
 
-    public enum Status {
-        OPEN, CLOSED, UNKNOWN
+    public enum Status implements Adaptable {
+        OPEN("Open"), CLOSED("Closed");
+
+        private String mStatus;
+
+        public String getTextValue() {
+            return mStatus;
+        }
+
+        Status(String status) {
+            mStatus = status;
+        }
+    }
+
+    public enum Gender implements Adaptable {
+        MALE("Male"), FEMALE("Female");
+
+        public String getTextValue() {
+            return mReadableValue;
+        }
+
+        private String mReadableValue;
+
+        Gender(String readableValue) {
+            mReadableValue = readableValue;
+        }
+    }
+
+    public interface Adaptable {
+        String getTextValue();
     }
 
     private String mIDString;
     private Building mBuilding;
     private String mReadableName;
     private Status mStatus;
+    private int mFloor;
 
     private String mRoomNumber;
 
@@ -64,4 +119,12 @@ public class Bathroom {
         mRoomNumber = roomNumber;
     }
 
+    public int getFloor() {
+        return mFloor;
+    }
+
+    public void setFloor(int floor) {
+        if(floor == 2 && this.mBuilding != null && this.mBuilding.getNumberOfFloors() == 2) mFloor = floor;
+        if(floor == 1) mFloor = floor;
+    }
 }
