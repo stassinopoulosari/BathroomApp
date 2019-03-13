@@ -46,8 +46,9 @@ public class ReportFragment extends Fragment {
         mReportBuildingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (buildingChoices[i] == null) return;
-                if (buildingChoices[i].getNumberOfFloors() == 2) {
+                Bathroom.Building selectedItem = (Bathroom.Building) mReportBuildingSpinner.getSelectedItem();
+                if (selectedItem == null) return;
+                if (selectedItem.getNumberOfFloors() == 2) {
                     mFloorSpinner.setEnabled(true);
                 } else {
                     mFloorSpinner.setEnabled(false);

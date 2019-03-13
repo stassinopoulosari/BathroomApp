@@ -13,8 +13,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/black"
+        android:text="Home"
+        android:textSize="20sp"
         tools:text="@string/home_header" />
 
     <ListView
