@@ -38,73 +38,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
 
-            <TextView
-                android:id="@+id/report_header_building"
+            <RelativeLayout
+                android:id="@+id/report_form_fragment_frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Building" />
+                android:layout_height="wrap_content">
 
-            <Spinner
-                android:id="@+id/report_building_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
-            <TextView
-                android:id="@+id/report_header_floor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Floor" />
-
-            <Spinner
-                android:id="@+id/report_floor_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
-            <TextView
-                android:id="@+id/report_header_gender"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Gender" />
-
-            <Spinner
-                android:id="@+id/report_gender_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
-            <TextView
-                android:id="@+id/report_header_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Status" />
-
-            <Spinner
-                android:id="@+id/report_status_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
-            <Button
-                android:id="@+id/report_submit_button"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="10dp"
-                android:text="Submit" />
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>

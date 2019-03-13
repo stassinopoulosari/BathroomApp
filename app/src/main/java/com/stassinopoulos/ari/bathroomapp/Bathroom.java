@@ -2,76 +2,13 @@ package com.stassinopoulos.ari.bathroomapp;
 
 public class Bathroom {
 
-    public enum Building implements Adaptable {
-        A("A"),B("B"),E("E"),G("G"),J("J"),M("M"),N("N"),Q("Q");
-
-        private String mLetter;
-
-        public String getTextValue() {
-            return mLetter;
-        }
-
-        public int getNumberOfFloors() {
-            switch(this) {
-                case A:
-                case B:
-                case E:
-                case G:
-                case N:
-                case Q:
-                    return 1;
-                default:
-                    return 2;
-            }
-        }
-
-        Building(String letter) {
-            mLetter = letter;
-        }
-
-
-    }
-
-    public enum Status implements Adaptable {
-        OPEN("Open"), CLOSED("Closed");
-
-        private String mStatus;
-
-        public String getTextValue() {
-            return mStatus;
-        }
-
-        Status(String status) {
-            mStatus = status;
-        }
-    }
-
-    public enum Gender implements Adaptable {
-        MALE("Male"), FEMALE("Female");
-
-        public String getTextValue() {
-            return mReadableValue;
-        }
-
-        private String mReadableValue;
-
-        Gender(String readableValue) {
-            mReadableValue = readableValue;
-        }
-    }
-
-    public interface Adaptable {
-        String getTextValue();
-    }
-
     private String mIDString;
     private Building mBuilding;
     private String mReadableName;
     private Status mStatus;
     private int mFloor;
-
     private String mRoomNumber;
-
+    
     public Bathroom(String idString, Building building, String readableName, Status status) {
         mIDString = idString;
         mBuilding = building;
@@ -124,7 +61,70 @@ public class Bathroom {
     }
 
     public void setFloor(int floor) {
-        if(floor == 2 && this.mBuilding != null && this.mBuilding.getNumberOfFloors() == 2) mFloor = floor;
-        if(floor == 1) mFloor = floor;
+        if (floor == 2 && this.mBuilding != null && this.mBuilding.getNumberOfFloors() == 2)
+            mFloor = floor;
+        if (floor == 1) mFloor = floor;
+    }
+
+    public enum Building implements Adaptable {
+        A("A"), B("B"), E("E"), G("G"), J("J"), M("M"), N("N"), Q("Q");
+
+        private String mLetter;
+
+        Building(String letter) {
+            mLetter = letter;
+        }
+
+        public String getTextValue() {
+            return mLetter;
+        }
+
+        public int getNumberOfFloors() {
+            switch (this) {
+                case A:
+                case B:
+                case E:
+                case G:
+                case N:
+                case Q:
+                    return 1;
+                default:
+                    return 2;
+            }
+        }
+
+
+    }
+
+    public enum Status implements Adaptable {
+        OPEN("Open"), CLOSED("Closed");
+
+        private String mStatus;
+
+        Status(String status) {
+            mStatus = status;
+        }
+
+        public String getTextValue() {
+            return mStatus;
+        }
+    }
+
+    public enum Gender implements Adaptable {
+        MALE("Male"), FEMALE("Female");
+
+        private String mReadableValue;
+
+        Gender(String readableValue) {
+            mReadableValue = readableValue;
+        }
+
+        public String getTextValue() {
+            return mReadableValue;
+        }
+    }
+
+    public interface Adaptable {
+        String getTextValue();
     }
 }
