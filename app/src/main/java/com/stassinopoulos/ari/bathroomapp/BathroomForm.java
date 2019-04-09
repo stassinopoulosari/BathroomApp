@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Space;
+import android.widget.Toast;
 
 public class BathroomForm extends Fragment {
 
@@ -94,18 +95,32 @@ public class BathroomForm extends Fragment {
             public void onClick(View view) {
 
                 Bathroom.Adaptable[] adaptables = {(Bathroom.Adaptable) mReportBuildingSpinner.getSelectedItem(), (Bathroom.Adaptable) mGenderSpinner.getSelectedItem(), (Bathroom.Adaptable) mStatusSpinner.getSelectedItem()};
-                for (Bathroom.Adaptable adaptable : adaptables) {
-                    if (adaptable == null) return;
+                Bathroom.Adaptable[] adaptablesWOStatus = {(Bathroom.Adaptable) mReportBuildingSpinner.getSelectedItem(), (Bathroom.Adaptable) mGenderSpinner.getSelectedItem()};
+
+                for (Bathroom.Adaptable adaptable : (mHasStatusField ? adaptables : adaptablesWOStatus)) {
+                    if (adaptable == null) {
+                        if(mReportBuildingSpinner.getSelectedItem() == null) {
+                            Toast.makeText(getContext(), "Please select a building", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if(mStatusSpinner.getSelectedItem() == null && mHasStatusField) {
+                            Toast.makeText(getContext(), "Please select a status", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Toast.makeText(getContext(), "Something has gone wrong with the form submission.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
 
                 Bathroom.Building building = (Bathroom.Building) mReportBuildingSpinner.getSelectedItem();
                 int floor = (Integer) mFloorSpinner.getSelectedItem();
                 Bathroom.Gender gender = (Bathroom.Gender) mGenderSpinner.getSelectedItem();
                 Bathroom.Status status = null;
+
                 Bathroom bathroom = new Bathroom(building, floor, gender);
                 Log.d("BUILDING", building.getTextValue());
                 Log.d("FLOOR", String.valueOf(floor));
                 Log.d("GENDER", gender.getTextValue());
+
                 if (mHasStatusField) {
                     status = (Bathroom.Status) mStatusSpinner.getSelectedItem();
                     bathroom = new Bathroom(building, floor, gender, status);
@@ -132,4 +147,5 @@ public class BathroomForm extends Fragment {
     public interface BathroomFormListener {
         void receiveRequest(Bathroom bathroom);
     }
+
 }

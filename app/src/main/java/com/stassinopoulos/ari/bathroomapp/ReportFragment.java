@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,12 +49,23 @@ public class ReportFragment extends Fragment {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("reports");
                 String key = ref.push().getKey();
-                ref.child(key).setValue(usableBathroom);
+                ref.child(key).setValue(usableBathroom).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(getContext(), "Report succeeded", Toast.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Post failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Toast.makeText(getContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
