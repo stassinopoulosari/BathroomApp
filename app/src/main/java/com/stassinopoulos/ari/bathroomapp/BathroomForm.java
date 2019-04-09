@@ -27,6 +27,7 @@ public class BathroomForm extends Fragment {
     private Space mStatusSpace;
 
     private boolean mHasStatusField = true;
+    private BathroomFormListener mBathroomFormListener;
 
     @Nullable
     @Override
@@ -100,15 +101,19 @@ public class BathroomForm extends Fragment {
                 Bathroom.Building building = (Bathroom.Building) mReportBuildingSpinner.getSelectedItem();
                 int floor = (Integer) mFloorSpinner.getSelectedItem();
                 Bathroom.Gender gender = (Bathroom.Gender) mGenderSpinner.getSelectedItem();
-
-
+                Bathroom.Status status = null;
+                Bathroom bathroom = new Bathroom(building, floor, gender);
                 Log.d("BUILDING", building.getTextValue());
                 Log.d("FLOOR", String.valueOf(floor));
                 Log.d("GENDER", gender.getTextValue());
                 if (mHasStatusField) {
-                    Bathroom.Status status = (Bathroom.Status) mStatusSpinner.getSelectedItem();
+                    status = (Bathroom.Status) mStatusSpinner.getSelectedItem();
+                    bathroom = new Bathroom(building, floor, gender, status);
                     Log.d("STATUS", status.getTextValue());
                 }
+
+                mBathroomFormListener.receiveRequest(bathroom);
+
             }
 
         });
@@ -117,5 +122,14 @@ public class BathroomForm extends Fragment {
     public BathroomForm setHasStatusField(boolean hasStatusField) {
         mHasStatusField = hasStatusField;
         return this;
+    }
+
+    public BathroomForm setBathroomFormListener(BathroomFormListener bathroomFormListener) {
+        mBathroomFormListener = bathroomFormListener;
+        return this;
+    }
+
+    public interface BathroomFormListener {
+        void receiveRequest(Bathroom bathroom);
     }
 }

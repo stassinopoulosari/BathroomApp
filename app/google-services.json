@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "527410552215",
+    "firebase_url": "https://bathroom-app-1e854.firebaseio.com",
+    "project_id": "bathroom-app-1e854",
+    "storage_bucket": "bathroom-app-1e854.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527410552215:android:1aa40b18c089ee30",
+        "android_client_info": {
+          "package_name": "com.stassinopoulos.ari.bathroomapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYAeM1yu0HEB4PwSA_GOhYyQjIV7GhnlY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "527410552215-kv3m2gdh915jnmv670idtd0rap9op73s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

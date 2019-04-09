@@ -1,27 +1,26 @@
 package com.stassinopoulos.ari.bathroomapp;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Bathroom {
 
-    private String mIDString;
     private Building mBuilding;
-    private String mReadableName;
+    private Gender mGender;
     private Status mStatus;
     private int mFloor;
-    private String mRoomNumber;
     
-    public Bathroom(String idString, Building building, String readableName, Status status) {
-        mIDString = idString;
+    public Bathroom(Building building, int floor, Gender gender, Status status) {
         mBuilding = building;
-        mReadableName = readableName;
         mStatus = status;
+        mGender = gender;
+        mFloor = floor;
     }
 
-    public String getIDString() {
-        return mIDString;
-    }
-
-    public void setIDString(String IDString) {
-        mIDString = IDString;
+    public Bathroom(Building building, int floor, Gender gender) {
+        mBuilding = building;
+        mFloor = floor;
+        mGender = gender;
     }
 
     public Building getBuilding() {
@@ -32,13 +31,6 @@ public class Bathroom {
         mBuilding = building;
     }
 
-    public String getReadableName() {
-        return mReadableName;
-    }
-
-    public void setReadableName(String readableName) {
-        mReadableName = readableName;
-    }
 
     public Status getStatus() {
         return mStatus;
@@ -46,14 +38,6 @@ public class Bathroom {
 
     public void setStatus(Status status) {
         mStatus = status;
-    }
-
-    public String getRoomNumber() {
-        return mRoomNumber;
-    }
-
-    public void setRoomNumber(String roomNumber) {
-        mRoomNumber = roomNumber;
     }
 
     public int getFloor() {
@@ -126,5 +110,24 @@ public class Bathroom {
 
     public interface Adaptable {
         String getTextValue();
+    }
+
+    public Gender getGender() {
+        return mGender;
+    }
+
+    public void setGender(Gender gender) {
+        mGender = gender;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> output = new HashMap<>();
+        output.put("building", getBuilding().toString());
+        output.put("gender", getGender().toString());
+        output.put("floor", getFloor());
+        if(mStatus != null) {
+            output.put("status", getStatus().toString());
+        }
+        return output;
     }
 }

@@ -3,8 +3,12 @@ package com.stassinopoulos.ari.bathroomapp;
 class BathroomReport {
 
     private Bathroom mBathroom;
-    private Bathroom.Status mStatus;
-    private String mIDString;
+    private Bathroom.Status mStatusChange;
+
+    public BathroomReport(Bathroom bathroon, Bathroom.Status status) {
+        this.mBathroom = bathroon;
+        this.mStatusChange = status;
+    }
 
     public Bathroom getBathroom() {
         return mBathroom;
@@ -14,19 +18,12 @@ class BathroomReport {
         mBathroom = bathroom;
     }
 
-    public Bathroom.Status getStatus() {
-        return mStatus;
+    public Bathroom.Status getNewStatus() {
+        return mStatusChange;
     }
 
     public void setStatus(Bathroom.Status status) {
-        mStatus = status;
+        mStatusChange = status;
     }
 
-    public String getIDString() {
-        return mIDString;
-    }
-
-    public void setIDString(String IDString) {
-        mIDString = IDString;
-    }
 }
