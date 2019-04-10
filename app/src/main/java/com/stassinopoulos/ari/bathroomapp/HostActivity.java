@@ -55,23 +55,40 @@ public class HostActivity extends AppCompatActivity {
         switchTab(HostTabType.HOME_TAB);
     }
 
-    private void switchTab(HostTabType hostTabType) {
+    public void switchTab(final HostTabType hostTabType) {
         if (mHostTabType != hostTabType) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+            if(mHostTabType != null) {
+                if (mHostTabType.getInt() > hostTabType.getInt()) {
+                    ft.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                } else {
+                    ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                }
+            }
 
             switch (hostTabType) {
                 case HOME_TAB:
                     ft.replace(R.id.host_relative_layout, new HomeFragment());
                     break;
                 case REPORT_TAB:
-                    ft.replace(R.id.host_relative_layout, new ReportFragment());
+                    ft.replace(R.id.host_relative_layout, new ReportFragment().setHostActivity(this));
                     break;
                 case REQUEST_TAB:
-                    ft.replace(R.id.host_relative_layout, new RequestFragment());
+                    ft.replace(R.id.host_relative_layout, new RequestFragment().setHostActivity(this));
                     break;
             }
 
+            ft.runOnCommit(new Runnable() {
+                @Override
+                public void run() {
+                    mTabLayout.getTabAt(hostTabType.getInt()).select();
+                }
+            });
+
             ft.commit();
+
+
 
             mHostTabType = hostTabType;
         }
@@ -80,7 +97,18 @@ public class HostActivity extends AppCompatActivity {
     public enum HostTabType {
         HOME_TAB,
         REPORT_TAB,
-        REQUEST_TAB
+        REQUEST_TAB;
+
+        public int getInt() {
+            switch(this){
+                case HOME_TAB:
+                    return 0;
+                case REPORT_TAB:
+                    return 1;
+                default:
+                    return 2;
+            }
+        }
     }
 
 

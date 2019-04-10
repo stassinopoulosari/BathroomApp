@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +13,24 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
+
 public class ReportFragment extends Fragment {
 
     private final int fragmentResource = R.layout.fragment_report;
+    private HostActivity mHostActivity;
 
+    public ReportFragment setHostActivity(HostActivity hostActivity) {
+        this.mHostActivity = hostActivity;
+        return this;
+    }
 
     @Nullable
     @Override
@@ -42,31 +51,45 @@ public class ReportFragment extends Fragment {
     }
 
     private void effectRequest(Bathroom bathroom) {
+
+        Log.e("Starting effect", bathroom.getBuilding().toString());
         final Bathroom usableBathroom = bathroom;
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+
+        getView().post(new Runnable() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("reports");
-                String key = ref.push().getKey();
-                ref.child(key).setValue(usableBathroom).addOnCompleteListener(new OnCompleteListener<Void>() {
+            public void run() {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(getContext(), "Report succeeded", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(AuthResult authResult) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference ref = database.getInstance().getReference("reports");
+                        String key = ref.push().getKey();
+                        ref.child(key).setValue(new FirebaseBathroomReport(usableBathroom, authResult.getUser().getUid()).toMap())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getContext(), "Report succeeded", Toast.LENGTH_SHORT).show();
+                                        mHostActivity.switchTab(HostActivity.HostTabType.HOME_TAB);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getContext(), "Report failed " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Post failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
-            }
         });
+
     }
 }

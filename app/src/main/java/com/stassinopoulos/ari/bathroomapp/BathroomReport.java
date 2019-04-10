@@ -1,12 +1,16 @@
 package com.stassinopoulos.ari.bathroomapp;
 
-class BathroomReport {
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+public class BathroomReport {
 
     private Bathroom mBathroom;
     private Bathroom.Status mStatusChange;
 
-    public BathroomReport(Bathroom bathroon, Bathroom.Status status) {
-        this.mBathroom = bathroon;
+    public BathroomReport(Bathroom bathroom, Bathroom.Status status) {
+        this.mBathroom = bathroom;
         this.mStatusChange = status;
     }
 
