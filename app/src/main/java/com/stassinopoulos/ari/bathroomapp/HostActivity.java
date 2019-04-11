@@ -3,6 +3,7 @@ package com.stassinopoulos.ari.bathroomapp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -59,7 +60,7 @@ public class HostActivity extends AppCompatActivity {
         if (mHostTabType != hostTabType) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-            if(mHostTabType != null) {
+            if (mHostTabType != null) {
                 if (mHostTabType.getInt() > hostTabType.getInt()) {
                     ft.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
                 } else {
@@ -69,7 +70,7 @@ public class HostActivity extends AppCompatActivity {
 
             switch (hostTabType) {
                 case HOME_TAB:
-                    ft.replace(R.id.host_relative_layout, new HomeFragment());
+                    ft.replace(R.id.host_relative_layout, new HomeFragment().setHostActivity(this));
                     break;
                 case REPORT_TAB:
                     ft.replace(R.id.host_relative_layout, new ReportFragment().setHostActivity(this));
@@ -89,6 +90,33 @@ public class HostActivity extends AppCompatActivity {
             ft.commit();
 
 
+            mHostTabType = hostTabType;
+        }
+    }
+
+    public void switchTab(final HostTabType hostTabType, Fragment precreatedFragment) {
+        if (mHostTabType != hostTabType) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+            if (mHostTabType != null) {
+                if (mHostTabType.getInt() > hostTabType.getInt()) {
+                    ft.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+                } else {
+                    ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                }
+            }
+
+            ft.replace(R.id.host_relative_layout, precreatedFragment);
+
+            ft.runOnCommit(new Runnable() {
+                @Override
+                public void run() {
+                    mTabLayout.getTabAt(hostTabType.getInt()).select();
+                }
+            });
+
+            ft.commit();
+
 
             mHostTabType = hostTabType;
         }
@@ -100,7 +128,7 @@ public class HostActivity extends AppCompatActivity {
         REQUEST_TAB;
 
         public int getInt() {
-            switch(this){
+            switch (this) {
                 case HOME_TAB:
                     return 0;
                 case REPORT_TAB:

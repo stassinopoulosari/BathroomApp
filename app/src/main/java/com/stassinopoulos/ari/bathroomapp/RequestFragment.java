@@ -21,12 +21,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class RequestFragment extends Fragment {
 
     private final int fragmentResource = R.layout.fragment_request;
     private HostActivity mHostActivity;
+    private BathroomForm mBathroomForm;
 
     public RequestFragment setHostActivity(HostActivity hostActivity) {
         this.mHostActivity = hostActivity;
@@ -39,13 +42,15 @@ public class RequestFragment extends Fragment {
         View fragmentInflatedView = inflater.inflate(fragmentResource, container, false);
 
         FragmentTransaction formFragmentTransaction = getFragmentManager().beginTransaction();
-        formFragmentTransaction.replace(R.id.request_bathroom_form_frame, new BathroomForm().setHasStatusField(false).setBathroomFormListener(new BathroomForm.BathroomFormListener() {
+
+        mBathroomForm = new BathroomForm().setHasStatusField(false).setBathroomFormListener(new BathroomForm.BathroomFormListener() {
             @Override
             public void receiveRequest(Bathroom bathroom) {
                 Log.d("RF", "Received request");
                 effectRequest(bathroom);
             }
-        }));
+        });
+        formFragmentTransaction.replace(R.id.request_bathroom_form_frame, mBathroomForm);
 
         formFragmentTransaction.commit();
 
@@ -91,4 +96,6 @@ public class RequestFragment extends Fragment {
             }
         });
     }
+
+
 }

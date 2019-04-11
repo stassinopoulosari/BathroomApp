@@ -7,6 +7,7 @@ import java.util.Map;
 public class ReceivedBathroom extends Bathroom {
 
     long mReceivedTimestamp = 0L;
+    int mStatisticCount = 1;
 
     public ReceivedBathroom(Building building, int floor, Gender gender, Status status) {
         super(building, floor, gender, status);
@@ -26,14 +27,6 @@ public class ReceivedBathroom extends Bathroom {
         this.mReceivedTimestamp = receivedTimestamp;
     }
 
-    public long getReceivedTimestamp() {
-        return mReceivedTimestamp;
-    }
-
-    public void setReceivedTimestamp(long receivedTimestamp) {
-        mReceivedTimestamp = receivedTimestamp;
-    }
-
     @Nullable
     public static ReceivedBathroom fromBathroom(Bathroom bathroom, long receivedTimestamp) {
         return new ReceivedBathroom(bathroom.getBuilding(), bathroom.getFloor(), bathroom.getGender(), bathroom.getStatus(), receivedTimestamp);
@@ -42,7 +35,30 @@ public class ReceivedBathroom extends Bathroom {
     @Nullable
     public static ReceivedBathroom fromMap(Map<String, Object> map, long receivedTimestamp) {
         Bathroom bathroom = Bathroom.fromMap(map);
-        if(bathroom == null) return null;
+        if (bathroom == null) return null;
         return ReceivedBathroom.fromBathroom(bathroom, receivedTimestamp);
+    }
+
+    public long getReceivedTimestamp() {
+        return mReceivedTimestamp;
+    }
+
+    public void setReceivedTimestamp(long receivedTimestamp) {
+        mReceivedTimestamp = receivedTimestamp;
+    }
+
+    public int getStatisticCount() {
+        return mStatisticCount;
+    }
+
+    public void addCase(ReceivedBathroom receivedBathroom) {
+        mStatisticCount++;
+        if (receivedBathroom.getReceivedTimestamp() > mReceivedTimestamp) {
+            mReceivedTimestamp = receivedBathroom.getReceivedTimestamp();
+        }
+    }
+
+    public boolean matches(ReceivedBathroom other) {
+        return other.getBuilding() == getBuilding() && other.getFloor() == getFloor() && other.getGender() == getGender() /*&& other.getStatus() == getStatus()*/;
     }
 }

@@ -1,6 +1,7 @@
 package com.stassinopoulos.ari.bathroomapp;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ public class Bathroom {
     private Gender mGender;
     private Status mStatus;
     private int mFloor;
-    
+
     public Bathroom(Building building, int floor, Gender gender, Status status) {
         mBuilding = building;
         mStatus = status;
@@ -25,6 +26,24 @@ public class Bathroom {
         mGender = gender;
     }
 
+    @Nullable
+    public static Bathroom fromMap(Map<String, Object> map) {
+        Log.e("BathroomBuilder:", map.get("building").getClass().getName() + " " + map.get("gender").getClass().getName() + " " + map.get("floor").getClass().getName());
+        if (!(map.get("building") instanceof String && map.get("gender") instanceof String && map.get("floor") instanceof Number))
+            return null;
+        String buildingString = (String) map.get("building");
+        String genderString = (String) map.get("gender");
+        int floor = ((Number) map.get("floor")).intValue();
+        Building building = Building.fromLetter(buildingString);
+        Gender gender = Gender.fromLetter(genderString);
+        Bathroom toReturn = new Bathroom(building, floor, gender);
+        if (map.get("status") instanceof String) {
+            Status status = Status.valueOf((String) map.get("status"));
+            toReturn = new Bathroom(building, floor, gender, status);
+        }
+        return toReturn;
+    }
+
     public Building getBuilding() {
         return mBuilding;
     }
@@ -32,7 +51,6 @@ public class Bathroom {
     public void setBuilding(Building building) {
         mBuilding = building;
     }
-
 
     public Status getStatus() {
         return mStatus;
@@ -52,6 +70,25 @@ public class Bathroom {
         if (floor == 1) mFloor = floor;
     }
 
+    public Gender getGender() {
+        return mGender;
+    }
+
+    public void setGender(Gender gender) {
+        mGender = gender;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> output = new HashMap<>();
+        output.put("building", getBuilding().getLetter());
+        output.put("gender", getGender().getLetter());
+        output.put("floor", getFloor());
+        if (mStatus != null) {
+            output.put("status", getStatus().toString());
+        }
+        return output;
+    }
+
     public enum Building implements Adaptable {
         A("A", "Admin"), B("B", "Hub"), E("E", "Student Union"), G("G", "Old Gym"), J("J", "J/K Building"), M("M", "L/M Building"), N("N", "N Building"), Q("Q", "Portables");
 
@@ -64,8 +101,8 @@ public class Bathroom {
         }
 
         public static Building fromLetter(String letter) {
-            for(Building building : Building.values()) {
-                if(building.getLetter().equals(letter)) return building;
+            for (Building building : Building.values()) {
+                if (building.getLetter().equals(letter)) return building;
             }
             return Building.A;
         }
@@ -112,25 +149,30 @@ public class Bathroom {
     public enum Gender implements Adaptable {
         MALE("M", "Male"), FEMALE("F", "Female");
 
-        private String mReadableValue;
         private String mLetter;
+        private String mReadableValue;
 
         Gender(String letter, String readableValue) {
-            mLetter = letter; mReadableValue = readableValue;
+            mLetter = letter;
+            mReadableValue = readableValue;
+        }
+
+        public static Gender fromLetter(String mLetter) {
+            switch (mLetter) {
+                case "M":
+                case "MALE":
+                case "Male":
+                    return Gender.MALE;
+                case "F":
+                case "FEMALE":
+                case "Female":
+                default:
+                    return Gender.FEMALE;
+            }
         }
 
         public String toString() {
             return mLetter;
-        }
-
-        public static Gender fromLetter(String mLetter) {
-            switch(mLetter) {
-                case "M":
-                    return Gender.MALE;
-                case "F":
-                default:
-                    return Gender.FEMALE;
-            }
         }
 
         public String getTextValue() {
@@ -144,40 +186,5 @@ public class Bathroom {
 
     public interface Adaptable {
         String getTextValue();
-    }
-
-    public Gender getGender() {
-        return mGender;
-    }
-
-    public void setGender(Gender gender) {
-        mGender = gender;
-    }
-
-    public Map<String, Object> toMap() {
-        Map<String, Object> output = new HashMap<>();
-        output.put("building", getBuilding().getLetter());
-        output.put("gender", getGender().getLetter());
-        output.put("floor", getFloor());
-        if(mStatus != null) {
-            output.put("status", getStatus().toString());
-        }
-        return output;
-    }
-
-    @Nullable
-    public static Bathroom fromMap(Map<String, Object> map) {
-        if(!(map.get("building") instanceof String && map.get("gender") instanceof String && map.get("floor") instanceof Double)) return null;
-        String buildingString = (String) map.get("building");
-        String genderString = (String) map.get("gender");
-        int floor = (Integer) map.get("floor");
-        Building building = Building.fromLetter(buildingString);
-        Gender gender = Gender.fromLetter(genderString);
-        Bathroom toReturn = new Bathroom(building, floor, gender);
-        if(map.get("status") instanceof String) {
-            Status status = Status.valueOf((String) map.get("status"));
-            toReturn = new Bathroom(building, floor, gender, status);
-        }
-        return toReturn;
     }
 }

@@ -11,21 +11,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
 
 public class ReportFragment extends Fragment {
 
     private final int fragmentResource = R.layout.fragment_report;
     private HostActivity mHostActivity;
+    private BathroomForm mBathroomForm;
+    private int floorIndex = 0;
+    private int buildingIndex = 0;
+    private int genderIndex = 0;
+    private int statusIndex = 0;
 
     public ReportFragment setHostActivity(HostActivity hostActivity) {
         this.mHostActivity = hostActivity;
@@ -38,12 +42,24 @@ public class ReportFragment extends Fragment {
         View fragmentInflatedView = inflater.inflate(fragmentResource, container, false);
 
         FragmentTransaction formFragmentTransaction = getFragmentManager().beginTransaction();
-        formFragmentTransaction.replace(R.id.report_form_fragment_frame, new BathroomForm().setHasStatusField(true).setBathroomFormListener(new BathroomForm.BathroomFormListener() {
+
+        mBathroomForm = new BathroomForm().setHasStatusField(true).setBathroomFormListener(new BathroomForm.BathroomFormListener() {
             @Override
             public void receiveRequest(Bathroom bathroom) {
                 effectRequest(bathroom);
             }
-        }));
+        }).setOnLoad(new Runnable() {
+            @Override
+            public void run() {
+                mBathroomForm.getStatusSpinner().setSelection(statusIndex);
+                mBathroomForm.getReportBuildingSpinner().setSelection(buildingIndex);
+                mBathroomForm.getGenderSpinner().setSelection(genderIndex);
+                mBathroomForm.getFloorSpinner().setSelection(floorIndex);
+            }
+        });
+
+
+        formFragmentTransaction.replace(R.id.report_form_fragment_frame, mBathroomForm);
 
         formFragmentTransaction.commit();
 
@@ -91,5 +107,24 @@ public class ReportFragment extends Fragment {
             }
         });
 
+    }
+
+    public BathroomForm getBathroomForm() {
+        return mBathroomForm;
+    }
+
+    public ReportFragment prefillForm(Bathroom bathroom) {
+        List<Bathroom.Building> buildingValues = Arrays.asList(Bathroom.Building.values());
+        List<Bathroom.Gender> genderValues = Arrays.asList(Bathroom.Gender.values());
+        List<Bathroom.Status> statuses = Arrays.asList(Bathroom.Status.values());
+
+        floorIndex = bathroom.getFloor() - 1;
+        genderIndex = genderValues.indexOf(bathroom.getGender());
+        buildingIndex = buildingValues.indexOf(bathroom.getBuilding()) + 1;
+
+        if (bathroom.getStatus() != null) {
+            statusIndex = -1 * statuses.indexOf(bathroom.getStatus()) + 2;
+        }
+        return this;
     }
 }

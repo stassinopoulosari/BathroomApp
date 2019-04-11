@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +29,13 @@ public class HomeFragment extends Fragment {
 
     private List<ReceivedBathroom> mReports;
     private List<ReceivedBathroom> mRequests;
-    private List<ReceivedBathroom> unifiedList;
+    private List<ReceivedBathroom> mUnifiedList;
+    private HostActivity mHostActivity;
+
+    public HomeFragment setHostActivity(HostActivity hostActivity) {
+        this.mHostActivity = hostActivity;
+        return this;
+    }
 
     @Nullable
     @Override
@@ -38,15 +44,30 @@ public class HomeFragment extends Fragment {
         View fragmentView = inflater.inflate(fragmentResource, container, false);
         mRecentReportList = fragmentView.findViewById(R.id.home_recent_reports_list);
 
+
         //TODO Get list of bathroom reports
         mReports = new ArrayList<>();
         mRequests = new ArrayList<>();
-        
+        mUnifiedList = new ArrayList<>();
+
+        final RecentArrayAdapter arrayAdapter = new RecentArrayAdapter(getContext(), R.layout.component_unified_result_item);
+        arrayAdapter.setUnifiedList(mUnifiedList);
+        arrayAdapter.setButtonReceiver(new RecentArrayAdapter.ButtonReceiver() {
+            @Override
+            public void onReceive(ReceivedBathroom toDisputeOrResolve) {
+                ReportFragment fragmentToSwitch = new ReportFragment().setHostActivity(mHostActivity).prefillForm(toDisputeOrResolve);
+
+                mHostActivity.switchTab(HostActivity.HostTabType.REPORT_TAB, fragmentToSwitch);
+
+            }
+        });
+        mRecentReportList.setAdapter(arrayAdapter);
+
         //mRecentReportList.setAdapter(new RecentActivityAdapter(getContext(), 0, new ArrayList<BathroomReport>()));
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        Query reportsRef = database.getReference("reports").orderByChild("timestamp").limitToFirst(5);
-        Query requestsRef = database.getReference("mRequests").orderByChild("timestamp").limitToFirst(5);
+        Query reportsRef = database.getReference("reports").orderByChild("timestamp").limitToFirst(50);
+        Query requestsRef = database.getReference("requests").orderByChild("timestamp").limitToFirst(50);
 
         ValueEventListener unifiedListener = new ValueEventListener() {
 
@@ -54,7 +75,7 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 Object value = dataSnapshot.getValue();
-                if(value == null) return;
+                if (value == null) return;
 
                 try {
                     switch (dataSnapshot.getKey()) {
@@ -62,6 +83,7 @@ public class HomeFragment extends Fragment {
                             mReports = new ArrayList<>();
                             if (!(value instanceof Map)) break;
                             Map<String, Object> newReports = (HashMap<String, Object>) value;
+                            outerloop:
                             for (Object report : newReports.values()) {
                                 if (!(report instanceof Map)) continue;
 
@@ -74,13 +96,21 @@ public class HomeFragment extends Fragment {
 
                                 ReceivedBathroom reportBathroom = ReceivedBathroom.fromMap((Map<String, Object>) reportMap.get("bathroom"), receivedTimestamp);
 
+                                for (ReceivedBathroom checkReport : mReports) {
+                                    if (checkReport.matches(reportBathroom)) {
+                                        checkReport.addCase(reportBathroom);
+                                        continue outerloop;
+                                    }
+                                }
+
                                 mReports.add(reportBathroom);
                             }
                             break;
-                        case "mRequests":
+                        case "requests":
                             mRequests = new ArrayList<>();
                             if (!(value instanceof Map)) break;
                             Map<String, Object> newRequests = (Map<String, Object>) value;
+                            outerloop:
                             for (Object request : newRequests.values()) {
                                 if (!(request instanceof Map)) continue;
 
@@ -93,24 +123,46 @@ public class HomeFragment extends Fragment {
 
                                 ReceivedBathroom requestBathroom = ReceivedBathroom.fromMap((Map<String, Object>) requestMap.get("bathroom"), receivedTimestamp);
 
+                                for (ReceivedBathroom checkRequest : mRequests) {
+                                    if (checkRequest.matches(requestBathroom)) {
+                                        checkRequest.addCase(requestBathroom);
+                                        continue outerloop;
+                                    }
+                                }
+
                                 mRequests.add(requestBathroom);
 
-                                unifiedList = new ArrayList<>();
-                                unifiedList.addAll(mRequests);
-                                unifiedList.addAll(mReports);
-                                unifiedList.sort(new Comparator<ReceivedBathroom>() {
-                                    @Override
-                                    public int compare(ReceivedBathroom t0, ReceivedBathroom t1) {
-                                        return (int) (t0.mReceivedTimestamp - t1.mReceivedTimestamp);
-                                    }
-                                });
                             }
                             break;
                         default:
                             break;
                     }
-                } catch(Exception e) {
-                    Log.e("Home", e.getLocalizedMessage());
+                    List<ReceivedBathroom> tempList = new ArrayList<>();
+                    Iterator<ReceivedBathroom> reqIter = mRequests.iterator();
+
+                    while (reqIter.hasNext()) {
+                        ReceivedBathroom rb = reqIter.next();
+                        for (ReceivedBathroom report : mReports) {
+                            if (report.matches(rb) && report.getReceivedTimestamp() > rb.getReceivedTimestamp()) {
+                                reqIter.remove();
+                            }
+                        }
+                    }
+
+                    tempList.addAll(mRequests);
+                    tempList.addAll(mReports);
+
+                    tempList.sort(new Comparator<ReceivedBathroom>() {
+                        @Override
+                        public int compare(ReceivedBathroom t0, ReceivedBathroom t1) {
+                            return (int) (t1.mReceivedTimestamp - t0.mReceivedTimestamp);
+                        }
+                    });
+                    mUnifiedList = tempList;
+                    System.out.println(mUnifiedList.size());
+                    arrayAdapter.setUnifiedList(mUnifiedList);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

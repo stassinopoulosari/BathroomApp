@@ -18,17 +18,32 @@ import android.widget.Toast;
 public class BathroomForm extends Fragment {
 
     private View mBathroomFormView;
+    private Runnable mOnloadRunnable;
     private AdapterView mReportBuildingSpinner;
     private AppCompatSpinner mFloorSpinner;
     private AppCompatSpinner mGenderSpinner;
     private AppCompatButton mSubmitButton;
-
     private AppCompatSpinner mStatusSpinner;
     private AppCompatTextView mStatusHeader;
     private Space mStatusSpace;
-
     private boolean mHasStatusField = true;
     private BathroomFormListener mBathroomFormListener;
+
+    public AdapterView getReportBuildingSpinner() {
+        return mReportBuildingSpinner;
+    }
+
+    public AppCompatSpinner getFloorSpinner() {
+        return mFloorSpinner;
+    }
+
+    public AppCompatSpinner getGenderSpinner() {
+        return mGenderSpinner;
+    }
+
+    public AppCompatSpinner getStatusSpinner() {
+        return mStatusSpinner;
+    }
 
     @Nullable
     @Override
@@ -99,10 +114,10 @@ public class BathroomForm extends Fragment {
 
                 for (Bathroom.Adaptable adaptable : (mHasStatusField ? adaptables : adaptablesWOStatus)) {
                     if (adaptable == null) {
-                        if(mReportBuildingSpinner.getSelectedItem() == null) {
+                        if (mReportBuildingSpinner.getSelectedItem() == null) {
                             Toast.makeText(getContext(), "Please select a building", Toast.LENGTH_SHORT).show();
                             return;
-                        } else if(mStatusSpinner.getSelectedItem() == null && mHasStatusField) {
+                        } else if (mStatusSpinner.getSelectedItem() == null && mHasStatusField) {
                             Toast.makeText(getContext(), "Please select a status", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -132,6 +147,10 @@ public class BathroomForm extends Fragment {
             }
 
         });
+
+        if (mOnloadRunnable != null) {
+            mOnloadRunnable.run();
+        }
     }
 
     public BathroomForm setHasStatusField(boolean hasStatusField) {
@@ -141,6 +160,11 @@ public class BathroomForm extends Fragment {
 
     public BathroomForm setBathroomFormListener(BathroomFormListener bathroomFormListener) {
         mBathroomFormListener = bathroomFormListener;
+        return this;
+    }
+
+    public BathroomForm setOnLoad(Runnable r) {
+        mOnloadRunnable = r;
         return this;
     }
 

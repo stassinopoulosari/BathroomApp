@@ -1,9 +1,5 @@
 package com.stassinopoulos.ari.bathroomapp;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 public class BathroomReport {
 
     private Bathroom mBathroom;

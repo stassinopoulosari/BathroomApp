@@ -1,11 +1,7 @@
 package com.stassinopoulos.ari.bathroomapp;
-import android.util.Log;
 
 import com.google.firebase.database.ServerValue;
-import com.stassinopoulos.ari.bathroomapp.Bathroom;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
